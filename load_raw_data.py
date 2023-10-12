@@ -44,6 +44,13 @@ files_directory = f"{tpcdi_directory}{scale_factor}"
 tgt_table = dbutils.widgets.get("table")
 ext_loc = dbutils.widgets.get("ext_loc")
 catalog = 'hive_metastore' #f"{dbutils.widgets.get('catalog')}"
+uc_catalog = f"uc_catalog_{user_name}"
+uc_database = f"uc_db_{user_name}"
+
+# COMMAND ----------
+
+spark.sql(f"""CREATE CATALOG IF NOT EXISTS {uc_catalog} """)
+spark.sql(f"""CREATE SCHEMA IF NOT EXISTS {uc_catalog}.{uc_database} """)
 
 # COMMAND ----------
 
@@ -87,10 +94,15 @@ def build_autoloader_stream(table,ext):
   dbutils.fs.rm(checkpoint_path, True) #Drop existing checkpoint if one exists
   output_path = ext_loc + user_name + '/' + table_name
 
-  df.writeStream.format("delta").outputMode("append").option("checkpointLocation", checkpoint_path).option("mergeSchema", "true").trigger(availableNow=True).start(output_path)
- 
-  spark.sql(f"""DROP TABLE IF EXISTS {table_name}""")
-  spark.sql(f"""CREATE EXTERNAL TABLE {table_name} LOCATION '{output_path}';""")
+  if ext == 'ext':
+    df.writeStream.format("delta").outputMode("append").option("checkpointLocation", checkpoint_path).option("mergeSchema", "true").trigger(availableNow=True).start(output_path)
+  
+    spark.sql(f"""DROP TABLE IF EXISTS {table_name}""")
+    spark.sql(f"""CREATE EXTERNAL TABLE {table_name} LOCATION '{output_path}';""")
+  else:
+    spark.sql(f"""DROP TABLE IF EXISTS {table_name}""")
+    df.writeStream.format("delta").outputMode("append").option("checkpointLocation", checkpoint_path).option("mergeSchema", "true").trigger(availableNow=True).toTable(f"{table_name}")
+    print(f"Managed Table : {table_name} ")
 
 # COMMAND ----------
 
