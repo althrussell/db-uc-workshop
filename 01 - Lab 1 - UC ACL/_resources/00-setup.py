@@ -9,12 +9,23 @@ dbutils.widgets.text("database", "uc_acl", "UC Database/Schema")
 
 # COMMAND ----------
 
-catalog = dbutils.widgets.get("catalog")
+user_name = spark.sql("select current_user()").collect()[0][0].split("@")[0].replace(".","_").replace("+","_")
+uc_catalog = f"uc_ws_{user_name}"
+
+
+# COMMAND ----------
+
+catalog = uc_catalog #dbutils.widgets.get("catalog")
+
 database = dbutils.widgets.get("database")
 import pandas as pd
 from glob import glob
 
 df = pd.read_parquet("https://raw.githubusercontent.com/databricks-demos/dbdemos-dataset/main/retail/c360/users_parquet/users.parquet.snappy")
+
+# COMMAND ----------
+
+
 
 # COMMAND ----------
 

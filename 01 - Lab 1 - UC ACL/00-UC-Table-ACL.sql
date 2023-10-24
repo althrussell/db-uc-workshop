@@ -1,11 +1,4 @@
 -- Databricks notebook source
--- MAGIC %md 
--- MAGIC ### A cluster has been created for this demo
--- MAGIC To run this demo, just select the cluster `dbdemos-uc-01-acl-al_thrussell` from the dropdown menu ([open cluster configuration](https://e2-demo-field-eng.cloud.databricks.com/#setting/clusters/1019-065317-si0om35t/configuration)). <br />
--- MAGIC *Note: If the cluster was deleted after 30 days, you can re-create it with `dbdemos.create_cluster('uc-01-acl')` or re-install the demo: `dbdemos.install('uc-01-acl')`*
-
--- COMMAND ----------
-
 -- MAGIC %md-sandbox
 -- MAGIC # Databricks Unity Catalog - Table ACL
 -- MAGIC
@@ -45,13 +38,13 @@
 
 -- COMMAND ----------
 
--- MAGIC %python
--- MAGIC dbutils.widgets.text("catalog", "dbdemos", "Catalog")
+-- DBTITLE 1,Initialize the demo dataset
+-- MAGIC %run ./_resources/00-setup 
 
 -- COMMAND ----------
 
--- DBTITLE 1,Initialize the demo dataset
--- MAGIC %run ./_resources/00-setup $catalog=$catalog
+-- MAGIC %python
+-- MAGIC dbutils.widgets.text("catalog", f"uc_ws_{user_name}",'Catalog')
 
 -- COMMAND ----------
 

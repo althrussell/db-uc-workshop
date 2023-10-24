@@ -9,9 +9,14 @@ external_location_path = dbutils.widgets.get("external_location_path")
 
 # COMMAND ----------
 
+user_name = spark.sql("select current_user()").collect()[0][0].split("@")[0].replace(".","_").replace("+","_")
+uc_catalog = f"uc_ws_{user_name}"
+
+# COMMAND ----------
+
 import pyspark.sql.functions as F
 import re
-catalog = dbutils.widgets.get("catalog")
+catalog = uc_catalog#dbutils.widgets.get("catalog")
 
 catalog_exists = False
 for r in spark.sql("SHOW CATALOGS").collect():

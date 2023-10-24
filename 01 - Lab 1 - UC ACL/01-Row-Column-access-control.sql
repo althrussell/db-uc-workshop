@@ -53,8 +53,14 @@
 
 -- COMMAND ----------
 
+-- MAGIC %python
+-- MAGIC user_name = spark.sql("select current_user()").collect()[0][0].split("@")[0].replace(".","_").replace("+","_")
+-- MAGIC dbutils.widgets.text("catalog", f"uc_ws_{user_name}",'Catalog')
+
+-- COMMAND ----------
+
 -- DBTITLE 1,Make sure we use our catalog and schema previously created
-USE CATALOG dbdemos;
+USE CATALOG ${catalog};
 USE SCHEMA uc_acl;
 
 -- COMMAND ----------
@@ -147,7 +153,7 @@ ALTER TABLE customers SET ROW FILTER region_filter ON (country);
 -- COMMAND ----------
 
 -- DBTITLE 1,🥷 Checking... Rows have been hidden. Only customers in US/Canada are visible!
-select * from customers
+select * from customers 
 
 -- COMMAND ----------
 
