@@ -8,7 +8,7 @@ ACL
 
 Migration
 
-Managed vs External
+Slides on : Managed vs External
     
 Discovery Tags
 
@@ -20,4 +20,8 @@ Volumes
 
 Delta Sharing
 
+Lakehouse Federation
 
+System Tables
+
+Marketplace
