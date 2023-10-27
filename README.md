@@ -7,10 +7,8 @@ Labs:
 ACL
 
 Migration
-  - External to External
-  - External to Managed
-  - Managed to Managed
-  - Managed to External
+
+Managed vs External
     
 Discovery Tags
 
