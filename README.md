@@ -3,7 +3,9 @@ Interactive Workshop to allow customers to get hands on with Unity Catalog in a 
 
 
 Labs:
+
 ACL
+
 Migration
   - External to External
   - External to Managed
@@ -11,7 +13,11 @@ Migration
   - Managed to External
     
 Discovery Tags
+
 RLS/CLM
+
 Lineage
+
 Delta Sharing
+
 
