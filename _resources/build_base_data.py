@@ -1,73 +1,51 @@
 # Databricks notebook source
-# MAGIC %md
-# MAGIC # Notebook Purpose
-# MAGIC * This notebook is intended to be reused for ALL RAW data ingestion into BRONZE tables.
-# MAGIC * It is metadata-driven and code is generic enough to allow for all required raw ingestion to happen
-# MAGIC * The Workflow will have an instance of this notebook running for each of the raw tables (reduces the need for extra code/notebooks for every bronze table)
-
-# COMMAND ----------
-
-# MAGIC %md
-# MAGIC # Setup
-
-# COMMAND ----------
-
 import json
 
-with open("./tools/traditional_config.json", "r") as json_conf:
+with open("../tools/traditional_config.json", "r") as json_conf:
   tables_conf = json.load(json_conf)['tables']
 
 # The raw tables we want to load direct include all staging tables AND all Warehouse tables that are considered BRONZE layer 
 all_tables = ([k for (k,v) in tables_conf.items() if v['layer']=='bronze'])
 all_tables.sort()
-user_name = spark.sql("select current_user()").collect()[0][0].split("@")[0].replace(".","_").replace("+","_")
+
 
 # COMMAND ----------
 
-dbutils.widgets.removeAll()
+#dbutils.widgets.removeAll()
 
 # COMMAND ----------
 
 #dbutils.widgets.text("catalog", f"hive_metastore",'Target Catalog')
-dbutils.widgets.text("source_db", f"uc_ws_{user_name}",'HMS Database')
-#dbutils.widgets.text("ext_db", f"{user_name}_ext",'Database of External Tables')
-dbutils.widgets.text("tpcdi_directory", "s3://db-tpcdi-datagen/", "Raw Files")
-dbutils.widgets.text("scale_factor", "100", "Scale factor")
-dbutils.widgets.dropdown("table", all_tables[0], all_tables, "Target Table Name")
-dbutils.widgets.text("ext_loc", "s3://db-workshop-332745928618-ap-southeast-2-62b65be0/", "External Location")
+user_name = spark.sql("select current_user()").collect()[0][0].split("@")[0].replace(".","_").replace("+","_")
+# dbutils.widgets.text("source_db", f"uc_ws_{user_name}",'HMS Database')
+# #dbutils.widgets.text("ext_db", f"{user_name}_ext",'Database of External Tables')
+# dbutils.widgets.text("tpcdi_directory", "s3://db-tpcdi-datagen/", "Raw Files")
+# dbutils.widgets.text("scale_factor", "100", "Scale factor")
+# dbutils.widgets.dropdown("table", all_tables[0], all_tables, "Target Table Name")
+# dbutils.widgets.text("ext_loc", "s3://db-workshop-332745928618-ap-southeast-2-3a6d1540/", "External Location")
 
 #managed_db = f"{dbutils.widgets.get('managed_db')}"
-source_db = f"{dbutils.widgets.get('source_db')}"
-scale_factor = dbutils.widgets.get("scale_factor")
-tpcdi_directory = dbutils.widgets.get("tpcdi_directory")
+
+source_db = f"uc_ws_{user_name}"
+scale_factor = "100"
+tpcdi_directory = "s3://db-tpcdi-datagen/"
 files_directory = f"{tpcdi_directory}{scale_factor}"
-tgt_table = dbutils.widgets.get("table")
-ext_loc = dbutils.widgets.get("ext_loc")
+#tgt_table = dbutils.widgets.get("table")
+ext_loc = "s3://"+spark.conf.get("da.workshop_bucket") +"/"+user_name+"/"
 catalog = 'hive_metastore' #f"{dbutils.widgets.get('catalog')}"
 uc_catalog = f"uc_catalog_{user_name}"
 uc_database = f"uc_db_{user_name}"
 
 # COMMAND ----------
 
-spark.sql(f"""CREATE CATALOG IF NOT EXISTS {uc_catalog} """)
+spark.sql(f"""CREATE CATALOG IF NOT EXISTS {uc_catalog} MANAGED LOCATION '{ext_loc}'""")
 spark.sql(f"""CREATE SCHEMA IF NOT EXISTS {uc_catalog}.{uc_database} """)
-
-# COMMAND ----------
-
-
 
 # COMMAND ----------
 
 spark.sql(f"""USE CATALOG {catalog} """)
 spark.sql(f"""CREATE SCHEMA IF NOT EXISTS {source_db} """)
 spark.sql(f"""USE SCHEMA {source_db}""") 
-
-# COMMAND ----------
-
-# MAGIC %md
-# MAGIC # Reusable Programattic Code to use Metadata to Build out all Raw tables 
-# MAGIC * Use the JSON metadata to Provide Needed Properties of the table. Table configs are located in the traditional_config.json file
-# MAGIC * This makes this notebook reusable as it is metadata-driven
 
 # COMMAND ----------
 
@@ -114,8 +92,8 @@ for table in all_tables:
 # COMMAND ----------
 
 #Build Managed Tables
-for table in all_tables:
-  build_autoloader_stream(table,'')
+#for table in all_tables:
+#  build_autoloader_stream(table,'')
 
 # COMMAND ----------
 
