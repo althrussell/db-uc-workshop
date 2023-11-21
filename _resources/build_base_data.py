@@ -27,7 +27,7 @@ user_name = spark.sql("select current_user()").collect()[0][0].split("@")[0].rep
 #managed_db = f"{dbutils.widgets.get('managed_db')}"
 
 source_db = f"uc_ws_{user_name}"
-scale_factor = "100"
+scale_factor = "10"
 tpcdi_directory = "s3://db-tpcdi-datagen/"
 files_directory = f"{tpcdi_directory}{scale_factor}"
 #tgt_table = dbutils.widgets.get("table")
