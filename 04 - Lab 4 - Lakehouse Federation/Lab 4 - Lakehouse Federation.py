@@ -4,6 +4,7 @@
 # COMMAND ----------
 
 # MAGIC %md
+# MAGIC ## Using the UI create Connection 
 # MAGIC 1. In your Databricks workspace, right click on Catalog, Open link in new Tab
 # MAGIC
 # MAGIC 2. In the left pane, expand the External Data menu and select Connections.
@@ -26,20 +27,38 @@
 
 # COMMAND ----------
 
-In your Databricks workspace, click Catalog icon Catalog.
+# MAGIC %md 
+# MAGIC ## Using UI to Create Catalog 
+# MAGIC In your Databricks workspace, click Catalog icon Catalog.
+# MAGIC
+# MAGIC Click the Create Catalog button.
+# MAGIC
+# MAGIC On the Create a new catalog dialog, enter a name for the catalog and select a Type of Foreign.
+# MAGIC
+# MAGIC Select the Connection that provides access to the database that you want to mirror as a Unity Catalog catalog.
+# MAGIC
+# MAGIC Enter the name of the Database that you want to mirror as a catalog.
+# MAGIC
+# MAGIC Requirements differ depending on the data source:
+# MAGIC
+# MAGIC MySQL uses a two-layer namespace and therefore does not require a database name.
+# MAGIC
+# MAGIC For connections to a catalog in another Databricks workspace, enter the Databricks Catalog name instead of a database name.
+# MAGIC
+# MAGIC Click Create.
 
-Click the Create Catalog button.
+# COMMAND ----------
 
-On the Create a new catalog dialog, enter a name for the catalog and select a Type of Foreign.
+# MAGIC %sql
+# MAGIC CREATE CONNECTION <connection_name> TYPE mysql
+# MAGIC OPTIONS (
+# MAGIC   host '<host name>',
+# MAGIC   port '3306',
+# MAGIC   user 'labuser',
+# MAGIC   password '<password>'
+# MAGIC );
 
-Select the Connection that provides access to the database that you want to mirror as a Unity Catalog catalog.
+# COMMAND ----------
 
-Enter the name of the Database that you want to mirror as a catalog.
-
-Requirements differ depending on the data source:
-
-MySQL uses a two-layer namespace and therefore does not require a database name.
-
-For connections to a catalog in another Databricks workspace, enter the Databricks Catalog name instead of a database name.
-
-Click Create.
+# MAGIC %sql
+# MAGIC CREATE FOREIGN CATALOG IF NOT EXISTS <catalog_name> USING CONNECTION <connection_name>;

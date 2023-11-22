@@ -112,26 +112,26 @@ get_cfn()
 
 # COMMAND ----------
 
-from databricks.sdk import WorkspaceClient
-from databricks.sdk.service import workspace
-w = WorkspaceClient()
+# from databricks.sdk import WorkspaceClient
+# from databricks.sdk.service import workspace
+# w = WorkspaceClient()
 
-def create_secret():
-    scope_name= 'q_fed'
-    key_name = 'mysql'
-    w.secrets.create_scope(scope=scope_name)
-    w.secrets.put_secret(scope=scope_name, key=key_name, string_value=spark.conf.get("da.rds_password"))
-    w.secrets.put_acl(scope=scope_name, permission=workspace.AclPermission.MANAGE, principal="users")
+# def create_secret():
+#     scope_name= 'q_fed'
+#     key_name = 'mysql'
+#     w.secrets.create_scope(scope=scope_name)
+#     w.secrets.put_secret(scope=scope_name, key=key_name, string_value=spark.conf.get("da.rds_password"))
+#     w.secrets.put_acl(scope=scope_name, permission=workspace.AclPermission.MANAGE, principal="users")
 
-def check_secret():
-    scopes = w.secrets.list_scopes()
-    for scope in scopes:
-        if scope.name == 'q_fed':
-            return
+# def check_secret():
+#     scopes = w.secrets.list_scopes()
+#     for scope in scopes:
+#         if scope.name == 'q_fed':
+#             return
 
-    create_secret() 
+#     create_secret() 
 
 
 # COMMAND ----------
 
-check_secret()
+#  check_secret()
