@@ -36,6 +36,62 @@
             "liquid": "CLUSTER BY (batchid)",
             "partition": "PARTITIONED BY (batchid)"
         },
+        "DimTrade":
+        {
+            "raw_schema": "tradeid BIGINT COMMENT 'Trade identifier', sk_brokerid BIGINT COMMENT 'Surrogate key for BrokerID', sk_createdateid BIGINT COMMENT 'Surrogate key for date created', sk_createtimeid BIGINT COMMENT 'Surrogate key for time created', sk_closedateid BIGINT COMMENT 'Surrogate key for date closed', sk_closetimeid BIGINT COMMENT 'Surrogate key for time closed', status STRING COMMENT 'Trade status', type STRING COMMENT 'Trade type', cashflag BOOLEAN COMMENT 'Is this trade a cash (1) or margin (0) trade?', sk_securityid BIGINT COMMENT 'Surrogate key for SecurityID', sk_companyid BIGINT COMMENT 'Surrogate key for CompanyID', quantity INT COMMENT 'Quantity of securities traded.', bidprice DOUBLE COMMENT 'The requested unit price.', sk_customerid BIGINT COMMENT 'Surrogate key for CustomerID', sk_accountid BIGINT COMMENT 'Surrogate key for AccountID', executedby STRING COMMENT 'Name of person executing the trade.', tradeprice DOUBLE COMMENT 'Unit price at which the security was traded.', fee DOUBLE COMMENT 'Fee charged for placing this trade request', commission DOUBLE COMMENT 'Commission earned on this trade', tax DOUBLE COMMENT 'Amount of tax due on this trade', batchid INT COMMENT 'Batch ID when this record was inserted'",
+            "layer": "silver",
+            "db": "wh"
+        },
+        "FactHoldings":
+        {
+            "raw_schema": "tradeid INT COMMENT 'Key for Orignial Trade Indentifier', currenttradeid INT COMMENT 'Key for the current trade', sk_customerid BIGINT COMMENT 'Surrogate key for Customer Identifier', sk_accountid BIGINT COMMENT 'Surrogate key for Account Identifier', sk_securityid BIGINT COMMENT 'Surrogate key for Security Identifier', sk_companyid BIGINT COMMENT 'Surrogate key for Company Identifier', sk_dateid BIGINT COMMENT 'Surrogate key for the date associated with the', sk_timeid BIGINT COMMENT 'Surrogate key for the time associated with the', currentprice DOUBLE COMMENT 'Unit price of this security for the current trade', currentholding INT COMMENT 'Quantity of a security held after the current trade.', batchid INT COMMENT 'Batch ID when this record was inserted'",
+            "layer": "gold",
+            "db": "wh"
+        },
+        "FactCashBalances":
+        {
+            "raw_schema": "sk_customerid BIGINT COMMENT 'Surrogate key for CustomerID', sk_accountid BIGINT COMMENT 'Surrogate key for AccountID', sk_dateid BIGINT COMMENT 'Surrogate key for the date', cash DOUBLE COMMENT 'Cash balance for the account after applying', batchid INT COMMENT 'Batch ID when this record was inserted'",
+            "layer": "gold",
+            "db": "wh"
+        },
+        "FactWatches":
+        {
+            "raw_schema": "sk_customerid BIGINT COMMENT 'Customer associated with watch list', sk_securityid BIGINT COMMENT 'Security listed on watch list', sk_dateid_dateplaced BIGINT COMMENT 'Date the watch list item was added', sk_dateid_dateremoved BIGINT COMMENT 'Date the watch list item was removed', batchid INT COMMENT 'Batch ID when this record was inserted', _active BOOLEAN GENERATED ALWAYS AS (isnull(sk_dateid_dateremoved)) COMMENT 'Generated Column indicating the watch is still active'",
+            "layer": "gold",
+            "db": "wh",
+            "liquid": "CLUSTER BY (batchid)",
+            "partition": "PARTITIONED BY (batchid)"
+        },
+        "DIMessages":{
+            "raw_schema": "MessageDateAndTime TIMESTAMP COMMENT 'Date and time of the message', BatchId INT COMMENT 'DI run number; see the section Overview of BatchID usage', MessageSource STRING COMMENT 'Typically the name of the transform that logs the message', MessageText STRING COMMENT 'Description of why the message was logged', MessageType STRING COMMENT 'Status or Alert or Reject', MessageData STRING  COMMENT 'Varies with the reason for logging the message'",
+            "layer": "silver",
+            "db": "wh"
+        },
+        "FinWire":
+        {
+            "raw_schema": "value STRING COMMENT 'Pre-parsed String Values of all FinWire files'",
+            "filename": "FINWIRE[0-9][0-9][0-9][0-9]Q[1-4]",
+            "path": "Batch1/Finwire",
+            "liquid": "CLUSTER BY (rectype)",
+            "partition": "PARTITIONED BY (rectype)",
+            "file_format": "text",
+            "db": "stage",
+            "layer": "bronze",
+            "add_tgt_schema": ", rectype STRING COMMENT 'Indicates the type of table into which this record will eventually be parsed: CMP, FIN, or SEC'",
+            "add_tgt_query": "substring(value, 16, 3) rectype"
+        },
+        "TradeIncremental":
+        {
+            "raw_schema": "cdc_flag STRING COMMENT 'Denotes insert or update', cdc_dsn BIGINT COMMENT 'Database Sequence Number', t_id BIGINT COMMENT 'Trade identifier.', t_dts TIMESTAMP COMMENT 'Date and time of trade.', t_st_id STRING COMMENT 'Status type identifier', t_tt_id STRING COMMENT 'Trade type identifier', t_is_cash TINYINT COMMENT 'Is this trade a cash (‘1’) or margin (‘0’) trade?', t_s_symb STRING COMMENT 'Security symbol of the security', t_qty INT COMMENT 'Quantity of securities traded.', t_bid_price DOUBLE COMMENT 'The requested unit price.', t_ca_id BIGINT COMMENT 'Customer account identifier.', t_exec_name STRING COMMENT 'Name of the person executing the trade.', t_trade_price DOUBLE COMMENT 'Unit price at which the security was traded.', t_chrg DOUBLE COMMENT 'Fee charged for placing this trade request.', t_comm DOUBLE COMMENT 'Commission earned on this trade', t_tax DOUBLE COMMENT 'Amount of tax due on this trade'",
+            "sep": "|",
+            "header": "False",
+            "path": "Batch[23]/Trade",
+            "filename": "Trade.txt",
+            "add_tgt_schema": ", batchid INT COMMENT 'Batch ID when this record was inserted'",
+            "add_tgt_query": "cast(substring(input_file_name() FROM (position('/Batch', input_file_name()) + 6) FOR 1) as int) batchid",
+            "db": "stage",
+            "layer": "bronze"
+        },
         "DailyMarketIncremental":
         {
             "raw_schema": "cdc_flag STRING COMMENT 'Denotes insert or update', cdc_dsn BIGINT COMMENT 'Database Sequence Number', dm_date DATE COMMENT 'Date of last completed trading day.', dm_s_symb STRING COMMENT 'Security symbol of the security', dm_close DOUBLE COMMENT 'Closing price of the security on this day.', dm_high DOUBLE COMMENT 'Highest price for the security on this day.', dm_low DOUBLE COMMENT 'Lowest price for the security on this day.', dm_vol INT COMMENT 'Volume of the security on this day.'",
@@ -63,7 +119,7 @@
             "liquid": "CLUSTER BY (tier)",
             "partition": "PARTITIONED BY (tier)"
         },
-        "AccountIncremental":
+        "Account":
         {
             "raw_schema": "cdc_flag STRING COMMENT 'Denotes insert or update', cdc_dsn BIGINT COMMENT 'Database Sequence Number', accountid BIGINT COMMENT 'Customer account identifier', ca_b_id BIGINT COMMENT 'Identifier of the managing broker', ca_c_id BIGINT COMMENT 'Owning customer identifier', accountDesc STRING COMMENT 'Name of customer account', TaxStatus TINYINT COMMENT 'Tax status of this account', ca_st_id STRING COMMENT 'Customer status type identifier'",
             "sep": "|",
