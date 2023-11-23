@@ -1,4 +1,8 @@
 # Databricks notebook source
+# MAGIC %run ../_resources/01-config
+
+# COMMAND ----------
+
 import json
 
 with open("../tools/traditional_config.json", "r") as json_conf:
@@ -26,7 +30,7 @@ user_name = spark.sql("select current_user()").collect()[0][0].split("@")[0].rep
 
 #managed_db = f"{dbutils.widgets.get('managed_db')}"
 
-source_db = f"uc_ws_{user_name}"
+source_db = f"hms_{user_name}"
 scale_factor = "10"
 tpcdi_directory = "s3://db-tpcdi-datagen/"
 files_directory = f"{tpcdi_directory}{scale_factor}"
@@ -35,6 +39,11 @@ ext_loc = "s3://"+spark.conf.get("da.workshop_bucket") +"/"+user_name+"/"
 catalog = 'hive_metastore' #f"{dbutils.widgets.get('catalog')}"
 uc_catalog = f"uc_catalog_{user_name}"
 uc_database = f"uc_db_{user_name}"
+
+# COMMAND ----------
+
+spark.sql(f"""DROP CATALOG IF EXISTS {uc_catalog} CASCADE """)
+spark.sql(f"""DROP SCHEMA IF EXISTS {catalog}.{source_db} CASCADE """)
 
 # COMMAND ----------
 

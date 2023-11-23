@@ -1,4 +1,12 @@
 # Databricks notebook source
+pip install -U databricks-sdk
+
+# COMMAND ----------
+
+dbutils.library.restartPython()
+
+# COMMAND ----------
+
 import boto3
 from botocore.exceptions import ClientError
 import json
@@ -53,45 +61,56 @@ def get_region():
 
 # COMMAND ----------
 
+
+
+# COMMAND ----------
+
 import boto3
 def get_cfn():
     client = boto3.client('cloudformation',region_name=get_region())
     response = client.describe_stacks()#StackName=dbutils.widgets.get("stack"))
     cfn_outputs = {}
+    #x =1
     for stack in response['Stacks']:
+        #print(x)
+        #x = x+1
     #spark.conf.set("da.stack",dbutils.widgets.get("stack"))
         outputs = stack.get('Outputs', [])
+        #print(outputs)
         if outputs:
-
-            desired_output_keys = ['DatabrickWorkshopBucket', 'RDSendpoint', 'RDSsecret']
+            #print(outputs)
+            exists = any('DatabrickWorkshopBucket' in d['OutputKey'] for d in outputs)
             
+            if(exists):
+                desired_output_keys = ['DatabrickWorkshopBucket', 'RDSendpoint', 'RDSsecret']
+                
 
-            for output in outputs:
-                output_key = output['OutputKey']
-                if output_key in desired_output_keys:
-                    cfn_outputs[output_key] = output['OutputValue']
+                for output in outputs:
+                    output_key = output['OutputKey']
+                    if output_key in desired_output_keys:
+                        cfn_outputs[output_key] = output['OutputValue']
 
-            workshop_bucket = cfn_outputs['DatabrickWorkshopBucket']
-            if 'RDSendpoint' in cfn_outputs:
-                rds_endpoint = cfn_outputs['RDSendpoint']
-                rds_user = 'labuser'
-                rds_password = get_secret(get_region(),cfn_outputs['RDSsecret'])
-            else:
-                rds_endpoint = 'None'
-                rds_user = 'None'
-                rds_password = 'None'
-            
-            spark.conf.set("da.workshop_bucket",workshop_bucket)
-            spark.conf.set("da.rds_endpoint",rds_endpoint)
-            spark.conf.set("da.rds_user",rds_user)
-            spark.conf.set("da.rds_password",rds_password)
+                workshop_bucket = cfn_outputs['DatabrickWorkshopBucket']
+                if 'RDSendpoint' in cfn_outputs:
+                    rds_endpoint = cfn_outputs['RDSendpoint']
+                    rds_user = 'labuser'
+                    rds_password = get_secret(get_region(),cfn_outputs['RDSsecret'])
+                else:
+                    rds_endpoint = 'None'
+                    rds_user = 'None'
+                    rds_password = 'None'
+                
+                spark.conf.set("da.workshop_bucket",workshop_bucket)
+                spark.conf.set("da.rds_endpoint",rds_endpoint)
+                spark.conf.set("da.rds_user",rds_user)
+                spark.conf.set("da.rds_password",rds_password)
 
-            print(f"""
-            S3 Bucket:                  {cfn_outputs['DatabrickWorkshopBucket']}
-            RDS End Point:              {rds_endpoint}
-            RDS User:                   {rds_user}
-            RDS Password:               {rds_password}
-            """)
+                print(f"""
+                S3 Bucket:                  {cfn_outputs['DatabrickWorkshopBucket']}
+                RDS End Point:              {rds_endpoint}
+                RDS User:                   {rds_user}
+                RDS Password:               {rds_password}
+                """)
 
 # COMMAND ----------
 
@@ -112,26 +131,30 @@ get_cfn()
 
 # COMMAND ----------
 
-# from databricks.sdk import WorkspaceClient
-# from databricks.sdk.service import workspace
-# w = WorkspaceClient()
+from databricks.sdk import WorkspaceClient
+from databricks.sdk.service import workspace
+w = WorkspaceClient()
 
-# def create_secret():
-#     scope_name= 'q_fed'
-#     key_name = 'mysql'
-#     w.secrets.create_scope(scope=scope_name)
-#     w.secrets.put_secret(scope=scope_name, key=key_name, string_value=spark.conf.get("da.rds_password"))
-#     w.secrets.put_acl(scope=scope_name, permission=workspace.AclPermission.MANAGE, principal="users")
+def create_secret():
+    scope_name= 'q_fed'
+    key_name = 'mysql'
+    w.secrets.create_scope(scope=scope_name)
+    w.secrets.put_secret(scope=scope_name, key=key_name, string_value=spark.conf.get("da.rds_password"))
+    w.secrets.put_acl(scope=scope_name, permission=workspace.AclPermission.MANAGE, principal="users")
 
-# def check_secret():
-#     scopes = w.secrets.list_scopes()
-#     for scope in scopes:
-#         if scope.name == 'q_fed':
-#             return
+def check_secret():
+    scopes = w.secrets.list_scopes()
+    for scope in scopes:
+        if scope.name == 'q_fed':
+            return
 
-#     create_secret() 
+    create_secret() 
 
 
 # COMMAND ----------
 
-#  check_secret()
+ check_secret()
+
+# COMMAND ----------
+
+
