@@ -39,6 +39,8 @@ ext_loc = "s3://"+spark.conf.get("da.workshop_bucket") +"/"+user_name+"/"
 catalog = 'hive_metastore' #f"{dbutils.widgets.get('catalog')}"
 uc_catalog = f"uc_catalog_{user_name}"
 uc_database = f"uc_db_{user_name}"
+volume =  f"volume_{user_name}"
+volume_path = "s3://"+spark.conf.get("da.workshop_bucket") +"/volume_"+user_name+"/"
 
 # COMMAND ----------
 
@@ -55,6 +57,18 @@ spark.sql(f"""CREATE SCHEMA IF NOT EXISTS {uc_catalog}.{uc_database} """)
 spark.sql(f"""USE CATALOG {catalog} """)
 spark.sql(f"""CREATE SCHEMA IF NOT EXISTS {source_db} """)
 spark.sql(f"""USE SCHEMA {source_db}""") 
+
+# COMMAND ----------
+
+
+
+# COMMAND ----------
+
+spark.sql(f"""
+CREATE EXTERNAL VOLUME {uc_catalog}.{uc_database}.{volume}
+    LOCATION '{volume_path}'
+    COMMENT 'This is volume for {user_name}'
+    """)
 
 # COMMAND ----------
 
