@@ -56,8 +56,25 @@ foreign_cat = user_name + '_mysql'
 uc_catalog = f"uc_catalog_{user_name}"
 uc_database = f"uc_db_{user_name}"
 new_table = uc_catalog + "." + uc_database + ".new_states"
-#
-# password = dbutils.secrets.get(scope="q_fed", key="mysql")
+
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC #You can also create Connection via SQL  
+# MAGIC
+# MAGIC
+# MAGIC
+# MAGIC > Example 
+# MAGIC ```
+# MAGIC CREATE CONNECTION <connection-name> TYPE postgresql
+# MAGIC OPTIONS (
+# MAGIC   host '<hostname>',
+# MAGIC   port '<port>',
+# MAGIC   user '<user>',
+# MAGIC   password '<password>'
+# MAGIC );
+# MAGIC ```
 
 # COMMAND ----------
 
@@ -71,6 +88,24 @@ OPTIONS (
 
 # COMMAND ----------
 
+# MAGIC %md
+# MAGIC #You can also create Catalog via SQL  
+# MAGIC
+# MAGIC
+# MAGIC
+# MAGIC > Example 
+# MAGIC ```
+# MAGIC CREATE CONNECTION <connection-name> TYPE postgresql
+# MAGIC OPTIONS (
+# MAGIC   host '<hostname>',
+# MAGIC   port '<port>',
+# MAGIC   user secret ('<secret-scope>','<secret-key-user>'),
+# MAGIC   password secret ('<secret-scope>','<secret-key-password>')
+# MAGIC )
+# MAGIC ```
+
+# COMMAND ----------
+
 spark.sql(f"""CREATE FOREIGN CATALOG IF NOT EXISTS {foreign_cat} USING CONNECTION `{connection_name}`""")
 
 # COMMAND ----------
@@ -78,10 +113,12 @@ spark.sql(f"""CREATE FOREIGN CATALOG IF NOT EXISTS {foreign_cat} USING CONNECTIO
 df = spark.sql(f"""
 SELECT a.city as city1, a.state, b.city as city2, b.stateprov FROM {foreign_cat}.demodb.customers a INNER JOIN {uc_catalog}.{uc_database}.customer_ext b ON a.state = b.stateprov
 """)
+df.display()
 
 # COMMAND ----------
 
-df.display()
+# MAGIC %md
+# MAGIC ###  Save Dataframe as a Delta Table in UC so we can See Lineage back to the mysql database  
 
 # COMMAND ----------
 
