@@ -53,6 +53,9 @@ user_name = spark.sql("select current_user()").collect()[0][0].split("@")[0].rep
 connection_name = user_name + '_mysql_connection'
 rds_endpoint = spark.conf.get("da.rds_endpoint")
 foreign_cat = user_name + '_mysql'
+uc_catalog = f"uc_catalog_{user_name}"
+uc_database = f"uc_db_{user_name}"
+new_table = uc_catalog + "." + uc_database + ".new_states"
 #
 # password = dbutils.secrets.get(scope="q_fed", key="mysql")
 
@@ -72,4 +75,14 @@ spark.sql(f"""CREATE FOREIGN CATALOG IF NOT EXISTS {foreign_cat} USING CONNECTIO
 
 # COMMAND ----------
 
+df = spark.sql(f"""
+SELECT a.city as city1, a.state, b.city as city2, b.stateprov FROM {foreign_cat}.demodb.customers a INNER JOIN {uc_catalog}.{uc_database}.customer_ext b ON a.state = b.stateprov
+""")
 
+# COMMAND ----------
+
+df.display()
+
+# COMMAND ----------
+
+df.write.mode("overwrite").format("delta").saveAsTable(new_table)
