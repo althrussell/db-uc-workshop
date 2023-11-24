@@ -80,7 +80,7 @@
             "add_tgt_schema": ", rectype STRING COMMENT 'Indicates the type of table into which this record will eventually be parsed: CMP, FIN, or SEC'",
             "add_tgt_query": "substring(value, 16, 3) rectype"
         },
-        "TradeIncremental":
+        "Trade":
         {
             "raw_schema": "cdc_flag STRING COMMENT 'Denotes insert or update', cdc_dsn BIGINT COMMENT 'Database Sequence Number', t_id BIGINT COMMENT 'Trade identifier.', t_dts TIMESTAMP COMMENT 'Date and time of trade.', t_st_id STRING COMMENT 'Status type identifier', t_tt_id STRING COMMENT 'Trade type identifier', t_is_cash TINYINT COMMENT 'Is this trade a cash (‘1’) or margin (‘0’) trade?', t_s_symb STRING COMMENT 'Security symbol of the security', t_qty INT COMMENT 'Quantity of securities traded.', t_bid_price DOUBLE COMMENT 'The requested unit price.', t_ca_id BIGINT COMMENT 'Customer account identifier.', t_exec_name STRING COMMENT 'Name of the person executing the trade.', t_trade_price DOUBLE COMMENT 'Unit price at which the security was traded.', t_chrg DOUBLE COMMENT 'Fee charged for placing this trade request.', t_comm DOUBLE COMMENT 'Commission earned on this trade', t_tax DOUBLE COMMENT 'Amount of tax due on this trade'",
             "sep": "|",
@@ -92,7 +92,7 @@
             "db": "stage",
             "layer": "bronze"
         },
-        "DailyMarketIncremental":
+        "DailyMarket":
         {
             "raw_schema": "cdc_flag STRING COMMENT 'Denotes insert or update', cdc_dsn BIGINT COMMENT 'Database Sequence Number', dm_date DATE COMMENT 'Date of last completed trading day.', dm_s_symb STRING COMMENT 'Security symbol of the security', dm_close DOUBLE COMMENT 'Closing price of the security on this day.', dm_high DOUBLE COMMENT 'Highest price for the security on this day.', dm_low DOUBLE COMMENT 'Lowest price for the security on this day.', dm_vol INT COMMENT 'Volume of the security on this day.'",
             "sep": "|",
@@ -105,7 +105,7 @@
             "layer": "bronze"
         },
         
-        "CustomerIncremental":
+        "Customer":
         {
             "raw_schema": "cdc_flag STRING COMMENT 'Denotes insert or update', cdc_dsn BIGINT COMMENT 'Database Sequence Number', customerid BIGINT COMMENT 'Customer identifier', taxid STRING COMMENT 'Customer’s tax identifier', status STRING COMMENT 'Customer status type identifier', lastname STRING COMMENT 'Primary Customers last name.', firstname STRING COMMENT 'Primary Customers first name.', middleinitial STRING COMMENT 'Primary Customers middle initial', gender STRING COMMENT 'Gender of the primary customer', tier TINYINT COMMENT 'Customer tier', dob DATE COMMENT 'Customer’s date of birth, as YYYY-MM-DD.', addressline1 STRING COMMENT 'Address Line 1', addressline2 STRING COMMENT 'Address Line 2', postalcode STRING COMMENT 'Zip or postal code', city STRING COMMENT 'City', stateprov STRING COMMENT 'State or province', country STRING COMMENT 'Country', c_ctry_1 STRING COMMENT 'Country code for Customers phone 1.', c_area_1 STRING COMMENT 'Area code for customer’s phone 1.', c_local_1 STRING COMMENT 'Local number for customer’s phone 1.', c_ext_1 STRING COMMENT 'Extension number for Customer’s phone 1.', c_ctry_2 STRING COMMENT 'Country code for Customers phone 2.', c_area_2 STRING COMMENT 'Area code for Customer’s phone 2.', c_local_2 STRING COMMENT 'Local number for Customer’s phone 2.', c_ext_2 STRING COMMENT 'Extension number for Customer’s phone 2.', c_ctry_3 STRING COMMENT 'Country code for Customers phone 3.', c_area_3 STRING COMMENT 'Area code for Customer’s phone 3.', c_local_3 STRING COMMENT 'Local number for Customer’s phone 3.', c_ext_3 STRING COMMENT 'Extension number for Customer’s phone 3.', email1 STRING COMMENT 'Customers e-mail address 1.', email2 STRING COMMENT 'Customers e-mail address 2.', lcl_tx_id STRING COMMENT 'Customers local tax rate', nat_tx_id STRING COMMENT 'Customers national tax rate'",
             "sep": "|",
@@ -132,7 +132,7 @@
             "layer": "bronze"
         },
         
-        "CashTransactionIncremental":
+        "CashTransaction":
         {
             "raw_schema": "cdc_flag STRING COMMENT 'Denotes insert or update', cdc_dsn BIGINT COMMENT 'Database Sequence Number', ct_ca_id BIGINT COMMENT 'Customer account identifier', ct_dts TIMESTAMP COMMENT 'Timestamp of when the trade took place', ct_amt DOUBLE COMMENT 'Amount of the cash transaction.', ct_name STRING COMMENT 'Transaction name, or description: e.g. Cash from sale of DuPont stock.'",
             "sep": "|",
