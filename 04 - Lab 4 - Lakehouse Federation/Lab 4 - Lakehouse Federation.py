@@ -49,16 +49,27 @@
 
 # COMMAND ----------
 
-# MAGIC %sql
-# MAGIC CREATE CONNECTION <connection_name> TYPE mysql
-# MAGIC OPTIONS (
-# MAGIC   host '<host name>',
-# MAGIC   port '3306',
-# MAGIC   user 'labuser',
-# MAGIC   password '<password>'
-# MAGIC );
+user_name = spark.sql("select current_user()").collect()[0][0].split("@")[0].replace(".","_").replace("+","_")
+connection_name = user_name + '_mysql_connection'
+rds_endpoint = spark.conf.get("da.rds_endpoint")
+foreign_cat = user_name + '_mysql'
+#
+# password = dbutils.secrets.get(scope="q_fed", key="mysql")
 
 # COMMAND ----------
 
-# MAGIC %sql
-# MAGIC CREATE FOREIGN CATALOG IF NOT EXISTS <catalog_name> USING CONNECTION <connection_name>;
+spark.sql(f"""CREATE CONNECTION `{connection_name}` TYPE mysql 
+OPTIONS (
+  host '{rds_endpoint}',
+  port '3306',
+  user 'labuser',
+  password secret('q_fed','mysql')
+)""")
+
+# COMMAND ----------
+
+spark.sql(f"""CREATE FOREIGN CATALOG IF NOT EXISTS {foreign_cat} USING CONNECTION `{connection_name}`""")
+
+# COMMAND ----------
+
+
