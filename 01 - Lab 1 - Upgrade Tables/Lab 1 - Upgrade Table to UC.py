@@ -83,3 +83,33 @@ df.display()
 # DBTITLE 1,Perform the SYNC
 df = spark.sql(f"""SYNC TABLE {uc_catalog}.{uc_database}.customer_ext FROM hive_metastore.{source_db}.customer_ext""")
 df.display()
+
+# COMMAND ----------
+
+df = spark.sql(f"""DESCRIBE EXTENDED {uc_catalog}.{uc_database}.customer_ext""")
+df.display()
+
+# COMMAND ----------
+
+# DBTITLE 1,Query the new UC Table
+df = spark.sql(f"""SELECT * FROM {uc_catalog}.{uc_database}.customer_ext LIMIT 10""")
+df.display()
+
+# COMMAND ----------
+
+# DBTITLE 1,Alter the Schema in HIVE and lets see if it SYNC's
+spark.sql(f"""ALTER TABLE hive_metastore.{source_db}.customer_ext ADD COLUMN new_column STRING""")
+
+# COMMAND ----------
+
+df = spark.sql(f"""SELECT new_column FROM {uc_catalog}.{uc_database}.customer_ext LIMIT 10""")
+df.display()
+
+# COMMAND ----------
+
+# DBTITLE 1,If table is out of Sync we can run REPAIR
+spark.sql(f"""REPAIR TABLE {uc_catalog}.{uc_database}.customer_ext SYNC METADATA""")
+
+# COMMAND ----------
+
+
