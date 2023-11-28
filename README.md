@@ -82,7 +82,6 @@ dbfs:/mnt/raw/yellow_tripdata_2019-12.csv
 5.Create workflow with NYtaxiJObNotebookOld from Repo with cluster in (4)
 
 
-
 6. Create default volume on the path and register files
 
 create catalog if not exists raw managed location 's3://<<bucketname>>/catstoragedefault';
