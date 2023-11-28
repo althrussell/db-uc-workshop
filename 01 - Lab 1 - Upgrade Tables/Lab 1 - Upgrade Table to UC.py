@@ -112,4 +112,11 @@ spark.sql(f"""REPAIR TABLE {uc_catalog}.{uc_database}.customer_ext SYNC METADATA
 
 # COMMAND ----------
 
-
+# MAGIC %md
+# MAGIC ## Conclusion
+# MAGIC
+# MAGIC Unity Catalog can easily be added as an addition to your workspace-level databases.
+# MAGIC
+# MAGIC You can easily upgrade your table using the UI for Managed Tables or with simple SQL command.
+# MAGIC
+# MAGIC For more details on the SYNC Command please reference https://docs.databricks.com/en/sql/language-manual/sql-ref-syntax-aux-sync.html
