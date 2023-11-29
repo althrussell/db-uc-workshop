@@ -4,7 +4,7 @@
 # COMMAND ----------
 
 # MAGIC %python
-# MAGIC aws_bucket_name="s3://"+spark.conf.get("da.workshop_bucket")
+# MAGIC  aws_bucket_name="s3://"+spark.conf.get("da.workshop_bucket")
 # MAGIC print({aws_bucket_name})
 
 # COMMAND ----------

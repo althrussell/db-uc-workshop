@@ -21,7 +21,7 @@ spark.sql(f"use catalog {catalog}")
 spark.sql(f"create schema if not exists {source_db}")
 dfraw.write.mode("overwrite").format("delta").saveAsTable(f"{source_db}.nyctaxi_trips")
 
-# COMMAND ----------
+# COMMAND  ----------
 
 dfrate= spark.read.option("header", True).parquet(raw_data_path_rate)
 dfrate.write.mode("overwrite").format("delta").saveAsTable(f"{source_db}.nyctaxi_ratecodes")

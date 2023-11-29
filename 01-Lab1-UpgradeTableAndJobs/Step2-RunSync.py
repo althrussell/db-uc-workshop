@@ -116,7 +116,7 @@ spark.sql(f"""REPAIR TABLE {uc_catalog}.{uc_database}.customer_ext SYNC METADATA
 
 # COMMAND ----------
 
-# DBTITLE 1,Sync Schmea in one shot
+#    DBTITLE 1,Sync Schmea in one shot
 spark.sql(f"SYNC SCHEMA {uc_catalog}.{uc_database} FROM hive_metastore.{user_name} DRY RUN").display()
 
 # COMMAND ----------

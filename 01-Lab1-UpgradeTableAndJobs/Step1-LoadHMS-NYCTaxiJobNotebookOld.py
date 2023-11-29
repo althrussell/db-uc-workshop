@@ -8,7 +8,7 @@ DDLSchema = "vendor_id string, pickup_datetime timestamp, dropoff_datetime times
 
 dfraw= spark.read.option("header", True).schema(DDLSchema).csv(raw_data_path_trips)
 
-# COMMAND ----------
+# COMMAND  ----------
 
 user_name = spark.sql("select current_user()").collect()[0][0].split("@")[0].replace(".","_").replace("+","_")
 source_db = f"{user_name}"
