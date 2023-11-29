@@ -74,7 +74,6 @@
 # COMMAND ----------
 
 # DBTITLE 1,Perform a DRY RUN
-
 df = spark.sql(f"""SYNC TABLE {uc_catalog}.{uc_database}.customer_ext FROM hive_metastore.{source_db}.customer_ext DRY RUN""")
 df.display()
 
@@ -109,6 +108,20 @@ df.display()
 
 # DBTITLE 1,If table is out of Sync we can run REPAIR
 spark.sql(f"""REPAIR TABLE {uc_catalog}.{uc_database}.customer_ext SYNC METADATA""")
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC Sync Schmea in one shot
+
+# COMMAND ----------
+
+# DBTITLE 1,Sync Schmea in one shot
+spark.sql(f"SYNC SCHEMA {uc_catalog}.{uc_database} FROM hive_metastore.{user_name} DRY RUN").display()
+
+# COMMAND ----------
+
+spark.sql(f"SYNC SCHEMA {uc_catalog}.{uc_database} FROM hive_metastore.{user_name}").display()
 
 # COMMAND ----------
 

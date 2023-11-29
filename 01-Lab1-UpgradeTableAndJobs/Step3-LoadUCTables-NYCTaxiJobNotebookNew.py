@@ -6,10 +6,6 @@ raw_data_path_rate="/Volumes/raw/nyctaxis/volratecode"
 
 # COMMAND ----------
 
-
-
-# COMMAND ----------
-
 DDLSchema = "vendor_id string, pickup_datetime timestamp, dropoff_datetime timestamp, passenger_count int, trip_distance float, pickup_longitude float, pickup_latitude float,rate_code int, store_and_fwd_flag int, dropoff_longitude float, dropoff_latitude float, payment_type string, fare_amount float, surcharge float, mta_tax float, tip_amount float, tolls_amount float, total_amount float"
 
 dfraw= spark.read.option("header", True).schema(DDLSchema).csv(raw_data_path_trips)
@@ -17,8 +13,11 @@ dfraw= spark.read.option("header", True).schema(DDLSchema).csv(raw_data_path_tri
 # COMMAND ----------
 
 user_name = spark.sql("select current_user()").collect()[0][0].split("@")[0].replace(".","_").replace("+","_")
-source_db = f"{user_name}"
+source_db = f"uc_db_{user_name}"
 print("My schema is -"+source_db)
+catalog=f"uc_catalog_{user_name}"
+print("Defaylt catalog is ->"+catalog)
+spark.sql(f"use catalog {catalog}")
 spark.sql(f"create schema if not exists {source_db}")
 dfraw.write.mode("overwrite").format("delta").saveAsTable(f"{source_db}.nyctaxi_trips")
 
