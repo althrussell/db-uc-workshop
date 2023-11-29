@@ -29,8 +29,7 @@
 
 -- COMMAND ----------
 
--- MAGIC %python
--- MAGIC spark.sql(f"""USE CATALOG {uc_catalog}""")
+-- MAGIC %run ./_resources/00-setup
 
 -- COMMAND ----------
 

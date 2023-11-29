@@ -4,13 +4,13 @@
 
 # COMMAND ----------
 
-dbutils.widgets.text("catalog", "dbdemos", "UC Catalog")
-dbutils.widgets.text("database", "uc_acl", "UC Database/Schema")
+# dbutils.widgets.text("catalog", "dbdemos", "UC Catalog")
+# dbutils.widgets.text("database", "uc_acl", "UC Database/Schema")
 
 # COMMAND ----------
 
-user_name = spark.sql("select current_user()").collect()[0][0].split("@")[0].replace(".","_").replace("+","_")
-uc_catalog = f"uc_catalog_{user_name}"
+# user_name = spark.sql("select current_user()").collect()[0][0].split("@")[0].replace(".","_").replace("+","_")
+# uc_catalog = f"uc_catalog_{user_name}"
 
 
 # COMMAND ----------
@@ -21,7 +21,7 @@ spark.sql(f"""USE CATALOG {uc_catalog}""")
 
 catalog = uc_catalog #dbutils.widgets.get("catalog")
 
-database = dbutils.widgets.get("database")
+database = "uc_acl"
 import pandas as pd
 from glob import glob
 
@@ -33,15 +33,14 @@ df = pd.read_parquet("https://raw.githubusercontent.com/databricks-demos/dbdemos
 
 # COMMAND ----------
 
-catalog_exists = False
-for r in spark.sql("SHOW CATALOGS").collect():
-    if r['catalog'] == catalog:
-        catalog_exists = True
+# catalog_exists = False
+# for r in spark.sql("SHOW CATALOGS").collect():
+#     if r['catalog'] == catalog:
+#         catalog_exists = True
 
 #As non-admin users don't have permission by default, let's do that only if the catalog doesn't exist (an admin need to run it first)     
-if not catalog_exists:
-    spark.sql(f"CREATE CATALOG IF NOT EXISTS {catalog}")
-    spark.sql(f"GRANT CREATE, USAGE on CATALOG {catalog} TO `account users`")
+# spark.sql(f"CREATE CATALOG IF NOT EXISTS {catalog}")
+spark.sql(f"GRANT CREATE, USAGE on CATALOG {catalog} TO `account users`")
 spark.sql(f"USE CATALOG {catalog}")
 
 db_not_exist = len([r for r in spark.sql('show databases').collect() if r['databaseName'] == database]) == 0
