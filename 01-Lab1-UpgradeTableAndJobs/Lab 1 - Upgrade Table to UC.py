@@ -74,7 +74,6 @@
 # COMMAND ----------
 
 # DBTITLE 1,Perform a DRY RUN
-
 df = spark.sql(f"""SYNC TABLE {uc_catalog}.{uc_database}.customer_ext FROM hive_metastore.{source_db}.customer_ext DRY RUN""")
 df.display()
 

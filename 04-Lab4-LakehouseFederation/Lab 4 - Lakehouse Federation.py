@@ -123,3 +123,7 @@ df.display()
 # COMMAND ----------
 
 df.write.mode("overwrite").format("delta").saveAsTable(new_table)
+
+# COMMAND ----------
+
+

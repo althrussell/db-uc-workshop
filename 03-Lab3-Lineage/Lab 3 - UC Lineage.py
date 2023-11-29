@@ -83,6 +83,7 @@
 
 # COMMAND ----------
 
+import pyspark.sql.functions as F
 df = spark.range(3).withColumn("price", F.round(10*F.rand(seed=42),2)).withColumnRenamed("id", "recipe_id")
 
 df.write.mode("overwrite").saveAsTable("uc_lineage.price")
