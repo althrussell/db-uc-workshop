@@ -25,16 +25,11 @@
 
 -- COMMAND ----------
 
--- MAGIC %run ../_resources/set_params
-
--- COMMAND ----------
-
 -- MAGIC %run ./_resources/00-setup
 
 -- COMMAND ----------
 
 -- DBTITLE 1,Make sure we use our catalog and schema previously created
-
 USE SCHEMA uc_acl;
 
 -- COMMAND ----------

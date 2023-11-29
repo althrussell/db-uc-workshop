@@ -56,7 +56,7 @@ foreign_cat = user_name + '_mysql'
 uc_catalog = f"uc_catalog_{user_name}"
 uc_database = f"uc_db_{user_name}"
 new_table = uc_catalog + "." + uc_database + ".new_states"
-
+rds_password = spark.conf.get("da.rds_password")
 
 # COMMAND ----------
 
@@ -83,7 +83,7 @@ OPTIONS (
   host '{rds_endpoint}',
   port '3306',
   user 'labuser',
-  password secret('q_fed','mysql')
+  password '{rds_password}'
 )""")
 
 # COMMAND ----------
@@ -123,3 +123,7 @@ df.display()
 # COMMAND ----------
 
 df.write.mode("overwrite").format("delta").saveAsTable(new_table)
+
+# COMMAND ----------
+
+
