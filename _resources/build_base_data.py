@@ -19,8 +19,21 @@ all_tables.sort()
 
 # COMMAND ----------
 
+
+
+# COMMAND ----------
+
+# MAGIC %run ../_resources/set_params
+
+# COMMAND ----------
+
+ext_loc = "s3://"+spark.conf.get("da.workshop_bucket") +"/"+user_name+"/"
+volume_path = "s3://"+spark.conf.get("da.workshop_bucket") +"/volume_"+user_name+"/"
+
+# COMMAND ----------
+
 #dbutils.widgets.text("catalog", f"hive_metastore",'Target Catalog')
-user_name = spark.sql("select current_user()").collect()[0][0].split("@")[0].replace(".","_").replace("+","_")
+# user_name = spark.sql("select current_user()").collect()[0][0].split("@")[0].replace(".","_").replace("+","_")
 # dbutils.widgets.text("source_db", f"uc_ws_{user_name}",'HMS Database')
 # #dbutils.widgets.text("ext_db", f"{user_name}_ext",'Database of External Tables')
 # dbutils.widgets.text("tpcdi_directory", "s3://db-tpcdi-datagen/", "Raw Files")
@@ -30,17 +43,17 @@ user_name = spark.sql("select current_user()").collect()[0][0].split("@")[0].rep
 
 #managed_db = f"{dbutils.widgets.get('managed_db')}"
 
-source_db = f"hms_{user_name}"
-scale_factor = "10"
-tpcdi_directory = "s3://db-tpcdi-datagen/"
-files_directory = f"{tpcdi_directory}{scale_factor}"
-#tgt_table = dbutils.widgets.get("table")
-ext_loc = "s3://"+spark.conf.get("da.workshop_bucket") +"/"+user_name+"/"
-catalog = 'hive_metastore' #f"{dbutils.widgets.get('catalog')}"
-uc_catalog = f"uc_catalog_{user_name}"
-uc_database = f"uc_db_{user_name}"
-volume =  f"volume_{user_name}"
-volume_path = "s3://"+spark.conf.get("da.workshop_bucket") +"/volume_"+user_name+"/"
+# source_db = f"hms_{user_name}"
+# scale_factor = "10"
+# tpcdi_directory = "s3://db-tpcdi-datagen/"
+# files_directory = f"{tpcdi_directory}{scale_factor}"
+# #tgt_table = dbutils.widgets.get("table")
+# ext_loc = "s3://"+spark.conf.get("da.workshop_bucket") +"/"+user_name+"/"
+# catalog = 'hive_metastore' #f"{dbutils.widgets.get('catalog')}"
+# uc_catalog = f"uc_catalog_{user_name}"
+# uc_database = f"uc_db_{user_name}"
+# volume =  f"volume_{user_name}"
+# volume_path = "s3://"+spark.conf.get("da.workshop_bucket") +"/volume_"+user_name+"/"
 
 # COMMAND ----------
 

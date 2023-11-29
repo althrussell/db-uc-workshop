@@ -1,11 +1,4 @@
 -- Databricks notebook source
--- MAGIC %md 
--- MAGIC ### A cluster has been created for this demo
--- MAGIC To run this demo, just select the cluster `dbdemos-uc-01-acl-al_thrussell` from the dropdown menu ([open cluster configuration](https://e2-demo-field-eng.cloud.databricks.com/#setting/clusters/1019-065317-si0om35t/configuration)). <br />
--- MAGIC *Note: If the cluster was deleted after 30 days, you can re-create it with `dbdemos.create_cluster('uc-01-acl')` or re-install the demo: `dbdemos.install('uc-01-acl')`*
-
--- COMMAND ----------
-
 -- MAGIC %md-sandbox
 -- MAGIC
 -- MAGIC # 🛡️ Row and column level access control with Databricks Unity Catalog
@@ -32,35 +25,16 @@
 
 -- COMMAND ----------
 
--- MAGIC %md
--- MAGIC
--- MAGIC ## I. Prepare the demo
+-- MAGIC %run ../_resources/set_params
 
 -- COMMAND ----------
 
--- MAGIC %md-sandbox
--- MAGIC ### I.1 Cluster setup for UC
--- MAGIC
--- MAGIC <img src="https://github.com/databricks-demos/dbdemos-resources/blob/main/images/product/uc/clusters_shared.png?raw=true" width="500px" style="float: right"/>
--- MAGIC
--- MAGIC To be able to run this demo, make sure you create a cluster with the shared security mode enabled.
--- MAGIC
--- MAGIC 1. Go in the compute page, create a new cluster
--- MAGIC
--- MAGIC 2. **Under "Access mode", select "Shared"**
--- MAGIC
--- MAGIC Just like dynamic views, RL and CL acces control are only supported on Shared clusters for now.
-
--- COMMAND ----------
-
--- MAGIC %python
--- MAGIC user_name = spark.sql("select current_user()").collect()[0][0].split("@")[0].replace(".","_").replace("+","_")
--- MAGIC dbutils.widgets.text("catalog", f"uc_ws_{user_name}",'Catalog')
+-- MAGIC %run ./_resources/00-setup
 
 -- COMMAND ----------
 
 -- DBTITLE 1,Make sure we use our catalog and schema previously created
-USE CATALOG ${catalog};
+
 USE SCHEMA uc_acl;
 
 -- COMMAND ----------
