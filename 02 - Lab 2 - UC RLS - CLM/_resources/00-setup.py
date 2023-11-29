@@ -10,8 +10,12 @@ dbutils.widgets.text("database", "uc_acl", "UC Database/Schema")
 # COMMAND ----------
 
 user_name = spark.sql("select current_user()").collect()[0][0].split("@")[0].replace(".","_").replace("+","_")
-uc_catalog = f"uc_ws_{user_name}"
+uc_catalog = f"uc_catalog_{user_name}"
 
+
+# COMMAND ----------
+
+spark.sql(f"""USE CATALOG {uc_catalog}""")
 
 # COMMAND ----------
 

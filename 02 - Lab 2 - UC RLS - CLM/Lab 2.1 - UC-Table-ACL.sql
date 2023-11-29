@@ -24,27 +24,8 @@
 
 -- COMMAND ----------
 
--- MAGIC %md-sandbox
--- MAGIC ## Cluster setup for UC
--- MAGIC
--- MAGIC <img src="https://github.com/databricks-demos/dbdemos-resources/blob/main/images/product/uc/clusters_assigned.png?raw=true" style="float: right" width="500px"/>
--- MAGIC
--- MAGIC
--- MAGIC To be able to run this demo, make sure you create a cluster with the security mode enabled.
--- MAGIC
--- MAGIC Go in the compute page, create a new cluster.
--- MAGIC
--- MAGIC Under "Access mode", select "Single User" and your UC-user (the user needs to exist at the workspace and the account level)
-
--- COMMAND ----------
-
 -- DBTITLE 1,Initialize the demo dataset
 -- MAGIC %run ./_resources/00-setup 
-
--- COMMAND ----------
-
--- MAGIC %python
--- MAGIC dbutils.widgets.text("catalog", f"uc_ws_{user_name}",'Catalog')
 
 -- COMMAND ----------
 
@@ -66,13 +47,6 @@
 -- MAGIC Note that the tables created before Unity Catalog are saved under the catalog named `hive_metastore`. Unity Catalog features are not available for this catalog.
 -- MAGIC
 -- MAGIC Note that Unity Catalog comes in addition to your existing data, not hard change required!
-
--- COMMAND ----------
-
--- The demo will create and use the catalog defined:
-CREATE CATALOG IF NOT EXISTS ${catalog};
--- Make it default for future usage (we won't have to specify it)
-USE CATALOG ${catalog};
 
 -- COMMAND ----------
 
@@ -98,8 +72,10 @@ USE uc_acl;
 -- COMMAND ----------
 
 -- DBTITLE 1,Let's make sure that all users can use the uc_acl schema for our demo:
-GRANT CREATE, USAGE ON CATALOG `${catalog}` TO `account users`;
-GRANT CREATE, USAGE ON SCHEMA uc_acl TO `account users`;
+-- MAGIC %python
+-- MAGIC spark.sql(f"""GRANT CREATE, USAGE ON CATALOG `{uc_catalog}` TO `account users`""")
+-- MAGIC
+-- MAGIC spark.sql("GRANT CREATE, USAGE ON SCHEMA uc_acl TO `account users`")
 
 -- COMMAND ----------
 
@@ -127,7 +103,7 @@ CREATE TABLE IF NOT EXISTS uc_acl.customers (
   address STRING,
   gender DOUBLE,
   age_group DOUBLE); ; 
-ALTER TABLE uc_acl.customers OWNER TO `account users`; -- for the demo only, allow all users to edit the table - don't do that in production!
+ALTER TABLE uc_acl.customers OWNER TO `account users`; -- for the lab only, allow all users to edit the table - don't do that in production!
 
 -- COMMAND ----------
 
@@ -150,7 +126,7 @@ SELECT * FROM  uc_acl.customers
 -- MAGIC
 -- MAGIC ### Creating groups
 -- MAGIC
--- MAGIC Databricks groups can be created at the account level using the Account Admin UI, or the SCIM API. Here, we created the `dataengineers` group for this demo.
+-- MAGIC Databricks groups can be created at the account level using the Account Admin UI, or the SCIM API. Here, we created the `dataengineers` group for this lab.
 -- MAGIC
 -- MAGIC *Note on workspace-level groups: you can also create groups at a workspace level, however, we recommend managing permissions with UC at an account level.*
 
@@ -180,4 +156,4 @@ SHOW GRANTS ON TABLE uc_acl.customers
 -- MAGIC
 -- MAGIC Databricks Unity Catalog provides built-in capabilities to add dynamic masking on columns or rows.
 -- MAGIC
--- MAGIC Let's see how this can be done in the [01-Row-Column-access-control notebook ]($./01-Row-Column-access-control).
+-- MAGIC Let's see how this can be done in the [Lab 2.2 - Row-Column-access-control notebook ]($./Lab 2.2 - Row-Column-access-control).
