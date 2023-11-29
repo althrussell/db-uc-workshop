@@ -101,5 +101,5 @@ grant READ VOLUME  on VOLUME `raw`.`nyctaxis`.`voltripdata` to `account users`;
 7.set spark.databricks.sql.initial.catalog.name "uc_catalog_"+<<username>> to UC clusters(To automate during cluster creation) and remove 'instance profile'
 
 
-8. Add new notebooks for hms raw->silver->gold and run it to UC compatible cluster(step 7)
+Add new notebooks for hms raw->silver->gold and run it to UC compatible cluster(step 7)
 
