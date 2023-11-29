@@ -15,6 +15,10 @@
 
 # COMMAND ----------
 
+# MAGIC %run ../../_resources/set_params
+
+# COMMAND ----------
+
 spark.sql(f"""USE CATALOG {uc_catalog}""")
 
 # COMMAND ----------
