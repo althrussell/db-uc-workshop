@@ -103,7 +103,7 @@ CREATE TABLE IF NOT EXISTS uc_acl.customers (
   address STRING,
   gender DOUBLE,
   age_group DOUBLE); ; 
-ALTER TABLE uc_acl.customers OWNER TO `account users`; -- for the lab only, allow all users to edit the table - don't do that in production!
+--ALTER TABLE uc_acl.customers OWNER TO `account users`; -- for the lab only, allow all users to edit the table - don't do that in production!
 
 -- COMMAND ----------
 

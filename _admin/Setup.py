@@ -64,5 +64,4 @@ for i in range(startAt, end + 1):
 
 # COMMAND ----------
 
-# DBTITLE 1,Assign permissions
 
