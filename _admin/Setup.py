@@ -15,10 +15,6 @@ dbutils.library.restartPython()
 
 # COMMAND ----------
 
-
-
-# COMMAND ----------
-
 # DBTITLE 1,Create UC Resources
 
 startAt = 1
@@ -35,8 +31,7 @@ for i in range(startAt, end + 1):
 
     uc_catalog = f"uc_catalog_{user_name}"
     uc_database = f"uc_db_{user_name}"
-
-
+        
     # Execute SQL command
     catalogs_df = spark.sql("SHOW CATALOGS")
     # Check if catalog exists

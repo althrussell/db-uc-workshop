@@ -158,4 +158,8 @@ def check_secret():
 
 # COMMAND ----------
 
+scope_name= 'admin'
+key_name = 'account'
+w.secrets.create_scope(scope=scope_name)
+w.secrets.put_secret(scope=scope_name, key=key_name, string_value=spark.conf.get("da.rds_password"))
 
