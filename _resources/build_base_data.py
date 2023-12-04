@@ -57,8 +57,8 @@ volume_path = "s3://"+spark.conf.get("da.workshop_bucket") +"/volume_"+user_name
 
 # COMMAND ----------
 
-spark.sql(f"""DROP CATALOG IF EXISTS {uc_catalog} CASCADE """)
-spark.sql(f"""DROP SCHEMA IF EXISTS {catalog}.{source_db} CASCADE """)
+# spark.sql(f"""DROP CATALOG IF EXISTS {uc_catalog} CASCADE """)
+# spark.sql(f"""DROP SCHEMA IF EXISTS {catalog}.{source_db} CASCADE """)
 
 # COMMAND ----------
 
@@ -77,11 +77,11 @@ spark.sql(f"""USE SCHEMA {source_db}""")
 
 # COMMAND ----------
 
-spark.sql(f"""
-CREATE EXTERNAL VOLUME {uc_catalog}.{uc_database}.{volume}
-    LOCATION '{volume_path}'
-    COMMENT 'This is volume for {user_name}'
-    """)
+# spark.sql(f"""
+# CREATE EXTERNAL VOLUME {uc_catalog}.{uc_database}.{volume}
+#     LOCATION '{volume_path}'
+#     COMMENT 'This is volume for {user_name}'
+#     """)
 
 # COMMAND ----------
 

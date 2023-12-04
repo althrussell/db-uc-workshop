@@ -44,15 +44,15 @@ df = pd.read_parquet("https://raw.githubusercontent.com/databricks-demos/dbdemos
 
 #As non-admin users don't have permission by default, let's do that only if the catalog doesn't exist (an admin need to run it first)     
 # spark.sql(f"CREATE CATALOG IF NOT EXISTS {catalog}")
-spark.sql(f"GRANT CREATE, USAGE on CATALOG {catalog} TO `account users`")
+#spark.sql(f"GRANT CREATE, USAGE on CATALOG {catalog} TO `account users`")
 spark.sql(f"USE CATALOG {catalog}")
 
 db_not_exist = len([r for r in spark.sql('show databases').collect() if r['databaseName'] == database]) == 0
 if db_not_exist:
   print(f"creating {database} database")
   spark.sql(f"CREATE DATABASE IF NOT EXISTS {catalog}.{database}")
-  spark.sql(f"GRANT CREATE, USAGE on DATABASE {catalog}.{database} TO `account users`")
-  spark.sql(f"ALTER SCHEMA {catalog}.{database} OWNER TO `account users`")
+#  spark.sql(f"GRANT CREATE, USAGE on DATABASE {catalog}.{database} TO `account users`")
+#  spark.sql(f"ALTER SCHEMA {catalog}.{database} OWNER TO `account users`")
 spark.sql(f"USE SCHEMA {database}")
 
 # COMMAND ----------
@@ -64,7 +64,7 @@ spark.sql(f"USE SCHEMA {database}")
 # MAGIC   gdpr_filter LONG); 
 # MAGIC
 # MAGIC -- ALTER TABLE uc_acl.users OWNER TO `account users`;
-# MAGIC ALTER TABLE analyst_permissions OWNER TO `account users`;
+# MAGIC --ALTER TABLE analyst_permissions OWNER TO `account users`;
 # MAGIC
 # MAGIC CREATE TABLE IF NOT EXISTS customers (
 # MAGIC   id STRING,
@@ -76,7 +76,7 @@ spark.sql(f"USE SCHEMA {database}")
 # MAGIC   address STRING,
 # MAGIC   gender DOUBLE,
 # MAGIC   age_group DOUBLE); 
-# MAGIC ALTER TABLE customers OWNER TO `account users`; -- for the demo only, allow all users to edit the table - don't do that in production!
+# MAGIC --ALTER TABLE customers OWNER TO `account users`; -- for the demo only, allow all users to edit the table - don't do that in production!
 
 # COMMAND ----------
 

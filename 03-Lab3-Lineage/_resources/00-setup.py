@@ -37,7 +37,7 @@ if db_not_exist:
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC CREATE TABLE IF NOT EXISTS uc_lineage.dinner ( recipe_id INT, full_menu STRING);
+# MAGIC --CREATE TABLE IF NOT EXISTS uc_lineage.dinner ( recipe_id INT, full_menu STRING);
 # MAGIC CREATE TABLE IF NOT EXISTS uc_lineage.dinner_price ( recipe_id INT, full_menu STRING, price DOUBLE);
 # MAGIC CREATE TABLE IF NOT EXISTS uc_lineage.menu ( recipe_id INT, app STRING, main STRING, desert STRING);
 # MAGIC CREATE TABLE IF NOT EXISTS uc_lineage.price ( recipe_id BIGINT, price DOUBLE) ;
@@ -45,7 +45,7 @@ if db_not_exist:
 # COMMAND ----------
 
 if db_not_exist:
-  spark.sql(f"GRANT MODIFY, SELECT ON TABLE uc_lineage.dinner TO `account users`")
+  #spark.sql(f"GRANT MODIFY, SELECT ON TABLE uc_lineage.dinner TO `account users`")
   spark.sql(f"GRANT MODIFY, SELECT ON TABLE uc_lineage.dinner_price TO `account users`")
   spark.sql(f"GRANT MODIFY, SELECT ON TABLE uc_lineage.menu TO `account users`")
   spark.sql(f"GRANT MODIFY, SELECT ON TABLE uc_lineage.price TO `account users`")

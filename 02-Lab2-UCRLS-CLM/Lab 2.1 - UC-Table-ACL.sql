@@ -71,14 +71,6 @@ USE uc_acl;
 
 -- COMMAND ----------
 
--- DBTITLE 1,Let's make sure that all users can use the uc_acl schema for our demo:
--- MAGIC %python
--- MAGIC spark.sql(f"""GRANT CREATE, USAGE ON CATALOG `{uc_catalog}` TO `account users`""")
--- MAGIC
--- MAGIC spark.sql("GRANT CREATE, USAGE ON SCHEMA uc_acl TO `account users`")
-
--- COMMAND ----------
-
 -- MAGIC %md
 -- MAGIC ## Creating our table
 -- MAGIC
@@ -103,7 +95,7 @@ CREATE TABLE IF NOT EXISTS uc_acl.customers (
   address STRING,
   gender DOUBLE,
   age_group DOUBLE); ; 
-ALTER TABLE uc_acl.customers OWNER TO `account users`; -- for the lab only, allow all users to edit the table - don't do that in production!
+--ALTER TABLE uc_acl.customers OWNER TO `account users`; -- for the lab only, allow all users to edit the table - don't do that in production!
 
 -- COMMAND ----------
 
