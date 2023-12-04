@@ -62,8 +62,8 @@ volume_path = "s3://"+spark.conf.get("da.workshop_bucket") +"/volume_"+user_name
 
 # COMMAND ----------
 
-# spark.sql(f"""CREATE CATALOG IF NOT EXISTS {uc_catalog} MANAGED LOCATION '{ext_loc}'""")
-# spark.sql(f"""CREATE SCHEMA IF NOT EXISTS {uc_catalog}.{uc_database} """)
+spark.sql(f"""CREATE CATALOG IF NOT EXISTS {uc_catalog} MANAGED LOCATION '{ext_loc}'""")
+spark.sql(f"""CREATE SCHEMA IF NOT EXISTS {uc_catalog}.{uc_database} """)
 
 # COMMAND ----------
 
