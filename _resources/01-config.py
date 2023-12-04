@@ -73,45 +73,45 @@ def get_cfn():
     #x =1
     for stack in response['Stacks']:
         #print(stack)
-        if stack['StackName'] == 'uc-boq-86':
+        #if stack['StackName'] == 'uc-boq-86':
         #x = x+1
     #spark.conf.set("da.stack",dbutils.w idgets.get("stack"))
-            outputs = stack.get('Outputs', [])
+        outputs = stack.get('Outputs', [])
+        #print(outputs)
+        if outputs:
             #print(outputs)
-            if outputs:
-                #print(outputs)
-                exists = any('DatabrickWorkshopBucket' in d['OutputKey'] for d in outputs)
+            exists = any('DatabrickWorkshopBucket' in d['OutputKey'] for d in outputs)
+            
+            if(exists):
+                desired_output_keys = ['DatabrickWorkshopBucket', 'RDSendpoint', 'RDSsecret']
                 
-                if(exists):
-                    desired_output_keys = ['DatabrickWorkshopBucket', 'RDSendpoint', 'RDSsecret']
-                    
 
-                    for output in outputs:
-                        output_key = output['OutputKey']
-                        if output_key in desired_output_keys:
-                            cfn_outputs[output_key] = output['OutputValue']
+                for output in outputs:
+                    output_key = output['OutputKey']
+                    if output_key in desired_output_keys:
+                        cfn_outputs[output_key] = output['OutputValue']
 
-                    workshop_bucket = cfn_outputs['DatabrickWorkshopBucket']
-                    if 'RDSendpoint' in cfn_outputs:
-                        rds_endpoint = cfn_outputs['RDSendpoint']
-                        rds_user = 'labuser'
-                        rds_password = get_secret(get_region(),cfn_outputs['RDSsecret'])
-                    else:
-                        rds_endpoint = 'None'
-                        rds_user = 'None'
-                        rds_password = 'None'
-                    
-                    spark.conf.set("da.workshop_bucket",workshop_bucket)
-                    spark.conf.set("da.rds_endpoint",rds_endpoint)
-                    spark.conf.set("da.rds_user",rds_user)
-                    spark.conf.set("da.rds_password",rds_password)
+                workshop_bucket = cfn_outputs['DatabrickWorkshopBucket']
+                if 'RDSendpoint' in cfn_outputs:
+                    rds_endpoint = cfn_outputs['RDSendpoint']
+                    rds_user = 'labuser'
+                    rds_password = get_secret(get_region(),cfn_outputs['RDSsecret'])
+                else:
+                    rds_endpoint = 'None'
+                    rds_user = 'None'
+                    rds_password = 'None'
+                
+                spark.conf.set("da.workshop_bucket",workshop_bucket)
+                spark.conf.set("da.rds_endpoint",rds_endpoint)
+                spark.conf.set("da.rds_user",rds_user)
+                spark.conf.set("da.rds_password",rds_password)
 
-                    print(f"""
-                    S3 Bucket:                  {cfn_outputs['DatabrickWorkshopBucket']}
-                    RDS End Point:              {rds_endpoint}
-                    RDS User:                   {rds_user}
-                    RDS Password:               {rds_password}
-                    """)
+                print(f"""
+                S3 Bucket:                  {cfn_outputs['DatabrickWorkshopBucket']}
+                RDS End Point:              {rds_endpoint}
+                RDS User:                   {rds_user}
+                RDS Password:               {rds_password}
+                """)
 
 # COMMAND ----------
 
