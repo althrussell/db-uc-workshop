@@ -4,13 +4,23 @@
 # COMMAND ----------
 
 # MAGIC %python
-# MAGIC  aws_bucket_name="s3://"+spark.conf.get("da.workshop_bucket")
+# MAGIC aws_bucket_name="s3://"+spark.conf.get("da.workshop_bucket")
+# MAGIC aws_bucket_without_prefix=spark.conf.get("da.workshop_bucket")
 # MAGIC print({aws_bucket_name})
 
 # COMMAND ----------
 
 mount_name = "s3"
-dbutils.fs.mount(f"s3a://{aws_bucket_name}", f"/mnt/{mount_name}")
+dbutils.fs.mount(f"s3a://{aws_bucket_without_prefix}", f"/mnt/{mount_name}")
+display(dbutils.fs.ls(f"/mnt/{mount_name}"))
+
+# COMMAND ----------
+
+#display(dbutils.fs.ls(f"/mnt/{mount_name}"))
+#dbutils.fs.unmount(f"/mnt/{mount_name}")
+
+# COMMAND ----------
+
 display(dbutils.fs.ls(f"/mnt/{mount_name}"))
 
 # COMMAND ----------
