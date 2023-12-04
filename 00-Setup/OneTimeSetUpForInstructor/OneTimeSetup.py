@@ -9,7 +9,17 @@
 
 # COMMAND ----------
 
+spark.conf.set("fs.s3a.endpoint","s3.ap-southeast-2.amazonaws.com")
+
+# COMMAND ----------
+
+display(dbutils.fs.mounts())
+display(dbutils.fs.ls(f"/mnt/{mount_name}"))
+
+# COMMAND ----------
+
 mount_name = "s3"
+dbutils.fs.unmount(f"/mnt/{mount_name}")
 dbutils.fs.mount(f"s3a://{aws_bucket_name}", f"/mnt/{mount_name}")
 display(dbutils.fs.ls(f"/mnt/{mount_name}"))
 
@@ -36,3 +46,7 @@ spark.sql("grant READ VOLUME  on VOLUME `raw`.`nyctaxis`.`voltripdata` to `accou
 # COMMAND ----------
 
 spark.sql("grant READ VOLUME  on VOLUME `raw`.`nyctaxis`.`volratecode` to `account users`").show()
+
+# COMMAND ----------
+
+
