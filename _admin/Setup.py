@@ -88,4 +88,29 @@ for cluster in clusters:
 
 # COMMAND ----------
 
+# DBTITLE 1,Start all Clusters
+my_cluster = '1204-032620-o9srdnwy'
+
+from databricks.sdk import WorkspaceClient
+#from databricks.sdk.service import Clusters
+
+# Initialize the workspace client
+w = WorkspaceClient()
+
+# List all clusters
+clusters = w.clusters.list()
+#print(clusters)
+# # Loop through the clusters and stop the ones that are running
+for cluster in clusters:
+    cluster_id = cluster.cluster_id
+    cluster_state = cluster.state
+    #print(cluster_state)
+    #print(f"Cluster Id: {cluster_id}. Cluster State: {cluster_state}")
+    # Check if the cluster is running and stop it
+    if str(cluster_state) == 'State.TERMINATED' and cluster_id != my_cluster:
+        w.clusters.start(cluster_id)
+        print(f"Starting cluster: {cluster_id}")
+
+# COMMAND ----------
+
 
