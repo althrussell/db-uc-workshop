@@ -17,7 +17,7 @@ dbutils.library.restartPython()
 
 # DBTITLE 1,Create UC Resources
 
-startAt = 1
+startAt = 51
 numberLabUser = 1 
 
 end = numberLabUser - 1 + startAt
@@ -28,7 +28,7 @@ for i in range(startAt, end + 1):
     user_email = "labuser+"+str(i)+"@awsbricks.com"
     user_name = user_email.split("@")[0].replace(".","_").replace("+","_")
     print(user_name)
-
+    ext_loc = "s3://"+spark.conf.get("da.workshop_bucket") +"/"+user_name+"/"
     uc_catalog = f"uc_catalog_{user_name}"
     uc_database = f"uc_db_{user_name}"
         

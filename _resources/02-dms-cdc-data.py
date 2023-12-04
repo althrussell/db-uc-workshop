@@ -3,7 +3,7 @@ import boto3
 region = get_region()
 client = boto3.client('lambda',region_name=region)
 response = client.invoke(
-    FunctionName='db-DataGen',
+    FunctionName='db-boq-uc-001-DataGen',
     InvocationType='RequestResponse',  # Set the invocation type as needed
     LogType='Tail',  # Set the log type as needed
     Payload='{}'  # Pass the payload as a string (if required)
