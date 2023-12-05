@@ -4,23 +4,23 @@
 # COMMAND ----------
 
 # MAGIC %python
-# MAGIC  aws_bucket_name="s3://"+spark.conf.get("da.workshop_bucket")
+# MAGIC aws_bucket_name="s3://"+spark.conf.get("da.workshop_bucket")
+# MAGIC aws_bucket_without_prefix=spark.conf.get("da.workshop_bucket")
 # MAGIC print({aws_bucket_name})
 
 # COMMAND ----------
 
-spark.conf.set("fs.s3a.endpoint","s3.ap-southeast-2.amazonaws.com")
-
-# COMMAND ----------
-
-display(dbutils.fs.mounts())
+mount_name = "s3"
+dbutils.fs.mount(f"s3a://{aws_bucket_without_prefix}", f"/mnt/{mount_name}")
 display(dbutils.fs.ls(f"/mnt/{mount_name}"))
 
 # COMMAND ----------
 
-mount_name = "s3"
-dbutils.fs.unmount(f"/mnt/{mount_name}")
-dbutils.fs.mount(f"s3a://{aws_bucket_name}", f"/mnt/{mount_name}")
+#display(dbutils.fs.ls(f"/mnt/{mount_name}"))
+#dbutils.fs.unmount(f"/mnt/{mount_name}")
+
+# COMMAND ----------
+
 display(dbutils.fs.ls(f"/mnt/{mount_name}"))
 
 # COMMAND ----------
@@ -33,7 +33,7 @@ spark.sql("create schema if not exists raw.nyctaxis");
 
 # COMMAND ----------
 
-spark.sql(f"CREATE EXTERNAL VOLUME if not exists raw.nyctaxis.volratecode LOCATION '{aws_bucket_name}/mount/ratecode' COMMENT 'This is raw volume'").show()
+spark.sql(f"CREATE  EXTERNAL VOLUME if not exists raw.nyctaxis.volratecode LOCATION '{aws_bucket_name}/mount/ratecode' COMMENT 'This is raw volume'").show()
 
 # COMMAND ----------
 
@@ -46,7 +46,3 @@ spark.sql("grant READ VOLUME  on VOLUME `raw`.`nyctaxis`.`voltripdata` to `accou
 # COMMAND ----------
 
 spark.sql("grant READ VOLUME  on VOLUME `raw`.`nyctaxis`.`volratecode` to `account users`").show()
-
-# COMMAND ----------
-
-
