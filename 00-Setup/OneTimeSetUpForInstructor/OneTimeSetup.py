@@ -33,7 +33,7 @@ spark.sql("create schema if not exists raw.nyctaxis");
 
 # COMMAND ----------
 
-spark.sql(f"CREATE EXTERNAL VOLUME if not exists raw.nyctaxis.volratecode LOCATION '{aws_bucket_name}/mount/ratecode' COMMENT 'This is raw volume'").show()
+spark.sql(f"CREATE  EXTERNAL VOLUME if not exists raw.nyctaxis.volratecode LOCATION '{aws_bucket_name}/mount/ratecode' COMMENT 'This is raw volume'").show()
 
 # COMMAND ----------
 
